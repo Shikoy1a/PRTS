@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: travel-system
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/travelsystem?serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: ryemon1122
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 3000
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.travel: INFO
+    com.baomidou.mybatisplus: INFO
+
+jwt:
+  secret: change_this_to_a_strong_secret_key
+  expire-seconds: 3600
+
