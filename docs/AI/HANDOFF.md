@@ -556,6 +556,23 @@
 - frontend/src/views/HomeView.vue
 - docs/AI/HANDOFF.md
 
+## 2026-03-28（登录态修复：dev 放行模式下仍可识别当前用户）
+### 负责人
+- Max1122Chen（max1122chen@126.com）
+
+### 原因与修复
+- 根因：`app.security.auth-enabled=false` 时仅做了 `permitAll`，未挂载 JWT 过滤器，导致 `SecurityUtil.getCurrentUserId()` 始终为空，前端登录后调用个性化/兴趣接口仍提示“未登录”。
+- 修复：在 `SecurityConfig` 的 dev 放行分支中同样注入 `JwtAuthenticationFilter`，实现“放行权限 + 保留登录态解析”。
+
+### 验证结果
+- `POST /api/auth/login`（dev 种子账号）返回 token。
+- 携带 token 调用：`GET /api/auth/interest` 返回 `200`。
+- 携带 token 调用：`GET /api/recommendation/personalized` 返回 `200`。
+
+### 变更文件
+- src/main/java/com/travel/security/SecurityConfig.java
+- docs/AI/HANDOFF.md
+
 ## 2026-03-28（推荐景点改造：从列表输出到真实个性化推荐）
 ### 负责人
 - Max1122Chen（max1122chen@126.com）

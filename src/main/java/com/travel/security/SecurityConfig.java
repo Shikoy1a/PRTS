@@ -62,6 +62,8 @@ public class SecurityConfig
         {
             log.warn("Security auth is disabled by config: app.security.auth-enabled=false");
             http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            // Dev mode keeps token parsing so APIs depending on current user can still resolve userId.
+            http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
         }
 
