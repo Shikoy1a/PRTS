@@ -1,0 +1,10 @@
+[
+  {"id": 301, "name": "nature", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 302, "name": "campus", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 303, "name": "history", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 304, "name": "museum", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 305, "name": "culture", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 306, "name": "photo", "type": "scenic", "createTime": "2026-03-28T12:00:00"},
+  {"id": 307, "name": "walk", "type": "route", "createTime": "2026-03-28T12:00:00"},
+  {"id": 308, "name": "food", "type": "preference", "createTime": "2026-03-28T12:00:00"}
+]

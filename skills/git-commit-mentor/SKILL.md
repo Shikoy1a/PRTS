@@ -45,6 +45,13 @@ Observed style from recent history:
 - Do not run git commit automatically.
 - If user approves and asks to commit, then execute commit.
 
+3.1 Commit execution hard rules (mandatory)
+- Never put literal `\\n` in the commit message body.
+- Always produce real multi-line commit text when executing commits.
+- Preferred execution method: write the final message to a temporary file and use `git commit -F <message-file>`.
+- Alternative method: use multiple `-m` blocks with true line breaks, not escaped newline strings.
+- Before commit, show an exact final preview and ensure each bilingual bullet occupies its own physical line.
+
 4. Final safety check
 - Re-verify changed files before commit in case edits occurred after draft.
 
@@ -94,3 +101,4 @@ Use this prompt after drafting:
 - Using feat when dominant change is a fix.
 - Omitting critical fix details (root cause and effect).
 - Committing before explicit approval.
+- Using escaped newline literals (`\\n`) that break commit body formatting.

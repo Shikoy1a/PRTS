@@ -1,0 +1,68 @@
+[
+  {
+    "id": 101,
+    "username": "dev_alice",
+    "password": "dev123456",
+    "email": "alice@example.com",
+    "nickname": "Alice",
+    "avatar": "",
+    "role": "USER",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  },
+  {
+    "id": 102,
+    "username": "dev_bob",
+    "password": "dev123456",
+    "email": "bob@example.com",
+    "nickname": "Bob",
+    "avatar": "",
+    "role": "USER",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  },
+  {
+    "id": 103,
+    "username": "dev_cathy",
+    "password": "dev123456",
+    "email": "cathy@example.com",
+    "nickname": "Cathy",
+    "avatar": "",
+    "role": "USER",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  },
+  {
+    "id": 104,
+    "username": "dev_dan",
+    "password": "dev123456",
+    "email": "dan@example.com",
+    "nickname": "Dan",
+    "avatar": "",
+    "role": "USER",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  },
+  {
+    "id": 105,
+    "username": "dev_ellen",
+    "password": "dev123456",
+    "email": "ellen@example.com",
+    "nickname": "Ellen",
+    "avatar": "",
+    "role": "USER",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  },
+  {
+    "id": 106,
+    "username": "dev_admin",
+    "password": "admin123",
+    "email": "admin@example.com",
+    "nickname": "Admin",
+    "avatar": "",
+    "role": "ADMIN",
+    "createTime": "2026-03-28T12:00:00",
+    "updateTime": "2026-03-28T12:00:00"
+  }
+]

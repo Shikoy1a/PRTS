@@ -1,0 +1,10 @@
+[
+  {"id": 901, "name": "红烧牛肉面", "cuisine": "面食", "description": "招牌牛肉面", "price": 18.00, "rating": 4.6, "heat": 320, "restaurantId": 804, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 902, "name": "宫保鸡丁", "cuisine": "家常菜", "description": "经典下饭菜", "price": 22.00, "rating": 4.5, "heat": 280, "restaurantId": 802, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 903, "name": "拿铁咖啡", "cuisine": "咖啡", "description": "香醇拿铁", "price": 26.00, "rating": 4.7, "heat": 260, "restaurantId": 803, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 904, "name": "鸡胸沙拉", "cuisine": "轻食", "description": "低脂轻食", "price": 24.00, "rating": 4.4, "heat": 190, "restaurantId": 805, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 905, "name": "番茄鸡蛋盖饭", "cuisine": "快餐", "description": "家常盖饭", "price": 16.00, "rating": 4.3, "heat": 210, "restaurantId": 801, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 906, "name": "黑椒意面", "cuisine": "西式", "description": "微辣口味", "price": 28.00, "rating": 4.2, "heat": 130, "restaurantId": 803, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 907, "name": "麻婆豆腐", "cuisine": "川菜", "description": "经典川味", "price": 20.00, "rating": 4.5, "heat": 170, "restaurantId": 802, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 908, "name": "培根三明治", "cuisine": "轻食", "description": "快捷早餐", "price": 19.00, "rating": 4.1, "heat": 110, "restaurantId": 806, "areaId": 203, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"}
+]

@@ -27,6 +27,9 @@ import com.travel.model.entity.Tag;
 import com.travel.model.entity.User;
 import com.travel.model.entity.UserInterest;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ import java.util.Map;
 @Component
 public class InMemoryDataLoader
 {
+
+    private static final Logger log = LoggerFactory.getLogger(InMemoryDataLoader.class);
 
     private final InMemoryStore store;
 
@@ -74,6 +79,14 @@ public class InMemoryDataLoader
 
     private final CommentMapper commentMapper;
 
+    private final DevSeedDataLoader devSeedDataLoader;
+
+    @Value("${app.storage.preload.enabled:true}")
+    private boolean preloadEnabled;
+
+    @Value("${app.debug.ignore-db-connection-failure:false}")
+    private boolean ignoreDbConnectionFailure;
+
     public InMemoryDataLoader(InMemoryStore store,
                                UserMapper userMapper,
                                UserInterestMapper userInterestMapper,
@@ -87,7 +100,8 @@ public class InMemoryDataLoader
                                FoodMapper foodMapper,
                                DiaryMapper diaryMapper,
                                DiaryDestinationMapper diaryDestinationMapper,
-                               CommentMapper commentMapper)
+                               CommentMapper commentMapper,
+                               DevSeedDataLoader devSeedDataLoader)
     {
         this.store = store;
         this.userMapper = userMapper;
@@ -103,11 +117,21 @@ public class InMemoryDataLoader
         this.diaryMapper = diaryMapper;
         this.diaryDestinationMapper = diaryDestinationMapper;
         this.commentMapper = commentMapper;
+        this.devSeedDataLoader = devSeedDataLoader;
     }
 
     @PostConstruct
     public void load()
     {
+        if (!preloadEnabled)
+        {
+            log.info("In-memory preload is disabled by config: app.storage.preload.enabled=false");
+            devSeedDataLoader.loadSeedIfEnabled("preload-disabled");
+            return;
+        }
+
+        try
+        {
         // 1) Users
         List<User> users = userMapper.selectList(null);
         for (User u : users)
@@ -209,6 +233,17 @@ public class InMemoryDataLoader
         for (Comment c : comments)
         {
             store.insertComment(c);
+        }
+        }
+        catch (Exception ex)
+        {
+            if (!ignoreDbConnectionFailure)
+            {
+                throw ex;
+            }
+            log.warn("In-memory preload skipped due to DB connectivity issue (app.debug.ignore-db-connection-failure=true). " +
+                    "Some DB-dependent features may be unavailable until connection is restored.", ex);
+            devSeedDataLoader.loadSeedIfEnabled("db-failure");
         }
     }
 }

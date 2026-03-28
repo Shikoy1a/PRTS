@@ -1,0 +1,8 @@
+[
+  {"id": 801, "name": "学一食堂", "description": "综合食堂", "location": "东区", "longitude": 116.3080, "latitude": 39.9960, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 802, "name": "燕园小厨", "description": "家常菜", "location": "图书馆旁", "longitude": 116.3095, "latitude": 39.9989, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 803, "name": "湖畔咖啡", "description": "咖啡简餐", "location": "未名湖畔", "longitude": 116.3102, "latitude": 39.9982, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 804, "name": "北门面馆", "description": "面食", "location": "北门", "longitude": 116.3115, "latitude": 40.0001, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 805, "name": "西门轻食", "description": "轻食沙拉", "location": "西门", "longitude": 116.3045, "latitude": 39.9982, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 806, "name": "博物馆茶点", "description": "轻餐和甜点", "location": "博物馆入口", "longitude": 116.3070, "latitude": 39.9992, "areaId": 203, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"}
+]

@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  security:
+    # 开发环境默认关闭鉴权，便于无数据库/无登录态调试。
+    auth-enabled: false
+  debug:
+    # 开发环境数据库不可用时允许启动，触发内存种子数据回填。
+    ignore-db-connection-failure: true
+  dev-seed:
+    # 开发环境默认开启测试种子数据。
+    enabled: true

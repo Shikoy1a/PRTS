@@ -1,0 +1,9 @@
+[
+  {"id": 501, "name": "东门", "type": "gate", "description": "校园东门", "location": "东门", "longitude": 116.313, "latitude": 39.999, "parentId": null, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 502, "name": "图书馆", "type": "library", "description": "主图书馆", "location": "图书馆", "longitude": 116.309, "latitude": 39.999, "parentId": null, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 503, "name": "教学楼A", "type": "teaching", "description": "教学楼A", "location": "教学楼A", "longitude": 116.308, "latitude": 39.997, "parentId": null, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 504, "name": "食堂", "type": "canteen", "description": "学生食堂", "location": "食堂", "longitude": 116.307, "latitude": 39.996, "parentId": null, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 505, "name": "西门", "type": "gate", "description": "校园西门", "location": "西门", "longitude": 116.304, "latitude": 39.998, "parentId": null, "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 506, "name": "博物馆入口", "type": "service", "description": "燕园博物馆入口", "location": "博物馆", "longitude": 116.307, "latitude": 39.999, "parentId": null, "areaId": 203, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 507, "name": "校史馆入口", "type": "service", "description": "校史馆入口", "location": "校史馆", "longitude": 116.306, "latitude": 39.998, "parentId": null, "areaId": 205, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"}
+]

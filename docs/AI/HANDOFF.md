@@ -205,3 +205,175 @@
 - skills/git-commit-mentor/SKILL.md
 - .github/copilot-instructions.md
 - docs/AI/HANDOFF.md
+
+## 2026-03-28（自定义数据结构框架首版落地）
+### 会话目标
+- 先盘点项目中 `java.util` 数据结构使用现状，再提供同名接口/实现的自定义数据结构包，支持后续通过替换 import 解耦。
+
+### 已完成
+- 完成 `java.util` 使用清单扫描（去重）：ArrayList、Collections、Comparator、Date、HashMap、Iterator、List、Map、NoSuchElementException、Objects、PriorityQueue、Set。
+- 新增自定义数据结构包 `com.travel.ds`，接口名与 Java 习惯保持一致：`Collection`、`List`、`Set`、`Map`、`Queue`、`Deque`。
+- 新增实现类：`ArrayList`、`LinkedList`、`HashMap`、`HashSet`、`PriorityQueue`、`ArrayDeque`。
+- 新增工具类：`Collections`（含 `sort/reverse/swap`）。
+- 通过编辑器诊断验证新增目录无语法错误（当前环境无 Maven 命令，未执行 `mvn compile`）。
+
+### 变更文件
+- src/main/java/com/travel/ds/Collection.java
+- src/main/java/com/travel/ds/List.java
+- src/main/java/com/travel/ds/Set.java
+- src/main/java/com/travel/ds/Map.java
+- src/main/java/com/travel/ds/Queue.java
+- src/main/java/com/travel/ds/Deque.java
+- src/main/java/com/travel/ds/ArrayList.java
+- src/main/java/com/travel/ds/LinkedList.java
+- src/main/java/com/travel/ds/HashMap.java
+- src/main/java/com/travel/ds/HashSet.java
+- src/main/java/com/travel/ds/PriorityQueue.java
+- src/main/java/com/travel/ds/ArrayDeque.java
+- src/main/java/com/travel/ds/Collections.java
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（数据库连接失败忽略开关）
+### 会话目标
+- 支持在非数据库开发场景下启动应用：数据库连接失败时可按开关忽略并继续运行。
+
+### 已完成
+- 在 `InMemoryDataLoader` 增加配置开关：
+  - `app.storage.preload.enabled`（是否执行启动预加载，默认 `true`）
+  - `app.debug.ignore-db-connection-failure`（数据库连接失败时是否忽略，默认 `false`）
+- 在 `application.yml` 新增上述配置项与说明注释。
+- 实测结果：
+  - 依赖解析成功（`mvn dependency:resolve` -> `BUILD SUCCESS`）
+  - 编译成功（`mvn -DskipTests compile` -> `BUILD SUCCESS`）
+  - 启动时设置 `APP_DEBUG_IGNORE_DB_CONNECTION_FAILURE=true`，数据库连接失败被告警后跳过预加载，应用仍成功启动（Tomcat 8080 started）。
+
+### 变更文件
+- src/main/java/com/travel/storage/InMemoryDataLoader.java
+- src/main/resources/application.yml
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（开发环境默认关闭鉴权）
+### 会话目标
+- 增加用户登录鉴权开关，并在开发环境默认关闭鉴权，提升无数据库场景下的开发与调试效率。
+
+### 已完成
+- 在安全配置中增加开关：`app.security.auth-enabled`（默认 `true`）。
+- 当开关为 `false` 时，放行全部请求并跳过 JWT 过滤链注入。
+- 在主配置中设置默认值为开启鉴权。
+- 新增 `application-dev.yml`，在 `dev` profile 下默认将鉴权开关设为关闭。
+- 验证结果：
+  - `mvn -DskipTests compile` 编译成功。
+  - 使用 `SPRING_PROFILES_ACTIVE=dev` 启动时，日志出现 `Security auth is disabled by config: app.security.auth-enabled=false`。
+  - 同时在数据库不可达场景下，应用仍可启动并监听 8080 端口（依赖此前数据库失败忽略开关）。
+
+### 变更文件
+- src/main/java/com/travel/security/SecurityConfig.java
+- src/main/resources/application.yml
+- src/main/resources/application-dev.yml
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（开发种子数据自动加载）
+### 会话目标
+- 在开发环境数据库不可用时，自动注入 5~10 条可测种子数据，保障前端联调与检索/推荐/路径功能验证。
+
+### 已完成
+- 新增 `DevSeedDataLoader`，覆盖以下内存数据：用户、兴趣、景区、标签及关联、建筑、道路、设施、餐厅、美食、游记、游记目的地、评论。
+- 在 `InMemoryDataLoader` 中接入种子数据回填触发点：
+  - 预加载显式关闭时触发
+  - 数据库连接失败且开启忽略开关时触发
+- 新增配置：
+  - `app.dev-seed.enabled`（全局默认 `false`）
+  - 在 `application-dev.yml` 中默认开启 `app.dev-seed.enabled=true`
+  - 在 `application-dev.yml` 中默认开启 `app.debug.ignore-db-connection-failure=true`
+- 验证结果：
+  - `mvn -DskipTests compile` -> BUILD SUCCESS
+  - `mvn spring-boot:run -Dspring-boot.run.profiles=dev` 启动日志出现 `Dev seed data loaded successfully`。
+  - 接口验证通过：
+    - `/api/recommendation/hot?page=1&size=3` 返回 5 条景区总量中的分页结果
+    - `/api/food/search?areaId=201&page=1&size=5` 返回种子美食数据
+    - `/api/route/map-data?areaId=201` 返回节点与边数据
+
+### 变更文件
+- src/main/java/com/travel/storage/DevSeedDataLoader.java
+- src/main/java/com/travel/storage/InMemoryDataLoader.java
+- src/main/resources/application.yml
+- src/main/resources/application-dev.yml
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（开发种子数据改造为 JSON 文件驱动）
+### 会话目标
+- 将 `DevSeedDataLoader` 中写死测试数据迁移为资源目录 JSON 文件，并补齐全量数据类型，确保无库开发可覆盖核心联调场景。
+
+### 已完成
+- 重构 `DevSeedDataLoader`：改为从 `app.dev-seed.path` 指定目录读取 JSON 并注入内存仓库。
+- 新增 13 个 seed 文件（全量覆盖）：
+  - `users`、`user_interests`、`scenic_areas`、`tags`、`scenic_area_tags`
+  - `buildings`、`roads`、`facilities`、`restaurants`、`foods`
+  - `diaries`、`diary_destinations`、`comments`
+- 保持原有回退触发策略不变：数据库预加载失败时（dev 下开启忽略）自动加载种子数据。
+- 新增配置：`app.dev-seed.path: classpath:dev-seed`。
+
+### 验证结果
+- `mvn -DskipTests compile` -> BUILD SUCCESS。
+- `mvn spring-boot:run -Dspring-boot.run.profiles=dev` 启动日志显示：
+  - `Dev seed data loaded from JSON path classpath:dev-seed successfully`
+  - 已加载计数：users=6, scenicAreas=6, facilities=7, foods=8, diaries=6, comments=8。
+- 接口验证通过：
+  - `/api/recommendation/hot?page=1&size=10`
+  - `/api/diary?page=1&size=10`
+  - `/api/facility/search?limit=20`
+
+### 变更文件
+- src/main/java/com/travel/storage/DevSeedDataLoader.java
+- src/main/resources/application.yml
+- src/main/resources/dev-seed/users.json
+- src/main/resources/dev-seed/user_interests.json
+- src/main/resources/dev-seed/scenic_areas.json
+- src/main/resources/dev-seed/tags.json
+- src/main/resources/dev-seed/scenic_area_tags.json
+- src/main/resources/dev-seed/buildings.json
+- src/main/resources/dev-seed/roads.json
+- src/main/resources/dev-seed/facilities.json
+- src/main/resources/dev-seed/restaurants.json
+- src/main/resources/dev-seed/foods.json
+- src/main/resources/dev-seed/diaries.json
+- src/main/resources/dev-seed/diary_destinations.json
+- src/main/resources/dev-seed/comments.json
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（自定义数据结构可用性与 java.util 一致性验证）
+### 会话目标
+- 验证 `com.travel.ds` 全部自定义数据结构可用，并与 `java.util` 对应容器在核心行为上保持一致。
+
+### 已完成
+- 修正原有基线测试中 `ArrayList#indexOf` 的错误断言。
+- 新增对照测试文件 `CustomDataStructuresParityTest`，覆盖：
+  - `ArrayList`、`LinkedList`、`HashMap`、`HashSet`、`PriorityQueue`、`ArrayDeque`、`Collections`
+  - 核心行为：增删改查、空值处理、越界/空容器异常、迭代与顺序、排序/反转/交换效果
+  - 对照方式：与 `java.util` 同操作、同断言结果
+- 修复实现差异：`PriorityQueue#offer` 增加 null 拒绝（抛 `NullPointerException`），对齐 `java.util.PriorityQueue`。
+
+### 验证结果
+- 执行：`mvn "-Dtest=CustomDataStructuresTest,CustomDataStructuresParityTest" test -q`
+- 结果：`TESTS_OK`（全部通过）。
+
+### 变更文件
+- src/main/java/com/travel/ds/PriorityQueue.java
+- src/test/java/com/travel/ds/CustomDataStructuresTest.java
+- src/test/java/com/travel/ds/CustomDataStructuresParityTest.java
+- docs/AI/HANDOFF.md
+
+## 2026-03-28（提交信息换行格式修复与 commit-mentor 强化）
+### 会话目标
+- 修复最近一次提交正文中 `\\n` 字面量导致的格式问题，并增强 `git-commit-mentor` 规则避免复发。
+
+### 已完成
+- 准备对最近一次提交执行 amend，改为真实多行提交正文（不含 `\\n` 字面量）。
+- 更新 `skills/git-commit-mentor/SKILL.md`：新增提交执行硬规则，强制使用真实多行文本并优先 `git commit -F`。
+- 更新 `.github/copilot-instructions.md`：补充仓库级禁止 `\\n` 字面量规则。
+
+### 变更文件
+- skills/git-commit-mentor/SKILL.md
+- .github/copilot-instructions.md
+- docs/AI/HANDOFF.md
+

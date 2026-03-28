@@ -1,0 +1,10 @@
+[
+  {"id": 1101, "userId": 102, "targetId": 201, "targetType": "scenic", "content": "风景很美，适合散步。", "rating": 4.8, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1102, "userId": 103, "targetId": 901, "targetType": "food", "content": "面很筋道。", "rating": 4.6, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1103, "userId": 101, "targetId": 803, "targetType": "restaurant", "content": "环境不错，安静。", "rating": 4.5, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1104, "userId": 104, "targetId": 205, "targetType": "scenic", "content": "讲解很细致。", "rating": 4.4, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1105, "userId": 105, "targetId": 1004, "targetType": "diary", "content": "攻略实用。", "rating": 4.7, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1106, "userId": 101, "targetId": 202, "targetType": "scenic", "content": "地标很有辨识度。", "rating": 4.6, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1107, "userId": 102, "targetId": 904, "targetType": "food", "content": "口味清爽。", "rating": 4.3, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 1108, "userId": 103, "targetId": 703, "targetType": "facility", "content": "位置好找。", "rating": 4.2, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"}
+]

@@ -1,0 +1,17 @@
+package com.travel.ds;
+
+public interface List<E> extends Collection<E> {
+    E get(int index);
+
+    E set(int index, E element);
+
+    void add(int index, E element);
+
+    boolean add(E element);
+
+    E remove(int index);
+
+    int indexOf(Object o);
+
+    int lastIndexOf(Object o);
+}

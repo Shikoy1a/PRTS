@@ -1,0 +1,10 @@
+[
+  {"id": 601, "startId": 501, "endId": 502, "distance": 600.0, "speed": 3.0, "congestion": 0.9, "vehicleType": "walk,bike,shuttle", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 602, "startId": 502, "endId": 503, "distance": 350.0, "speed": 3.0, "congestion": 0.8, "vehicleType": "walk,bike", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 603, "startId": 503, "endId": 504, "distance": 280.0, "speed": 2.5, "congestion": 0.7, "vehicleType": "walk,bike", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 604, "startId": 504, "endId": 505, "distance": 420.0, "speed": 3.0, "congestion": 0.9, "vehicleType": "walk,bike,shuttle", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 605, "startId": 502, "endId": 505, "distance": 700.0, "speed": 4.0, "congestion": 1.0, "vehicleType": "walk,bike,shuttle", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 606, "startId": 502, "endId": 506, "distance": 300.0, "speed": 2.8, "congestion": 0.8, "vehicleType": "walk", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 607, "startId": 506, "endId": 507, "distance": 450.0, "speed": 3.0, "congestion": 0.8, "vehicleType": "walk,bike", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"},
+  {"id": 608, "startId": 507, "endId": 505, "distance": 260.0, "speed": 2.6, "congestion": 0.7, "vehicleType": "walk", "areaId": 201, "createTime": "2026-03-28T12:00:00", "updateTime": "2026-03-28T12:00:00"}
+]

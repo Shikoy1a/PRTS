@@ -1,0 +1,8 @@
+[
+  {"id": 401, "scenicAreaId": 201, "tagId": 301, "weight": 1.0, "createTime": "2026-03-28T12:00:00"},
+  {"id": 402, "scenicAreaId": 202, "tagId": 302, "weight": 1.0, "createTime": "2026-03-28T12:00:00"},
+  {"id": 403, "scenicAreaId": 203, "tagId": 304, "weight": 1.0, "createTime": "2026-03-28T12:00:00"},
+  {"id": 404, "scenicAreaId": 204, "tagId": 301, "weight": 0.8, "createTime": "2026-03-28T12:00:00"},
+  {"id": 405, "scenicAreaId": 205, "tagId": 303, "weight": 1.0, "createTime": "2026-03-28T12:00:00"},
+  {"id": 406, "scenicAreaId": 206, "tagId": 306, "weight": 0.7, "createTime": "2026-03-28T12:00:00"}
+]
