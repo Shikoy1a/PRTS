@@ -7,7 +7,9 @@ import {
   apiPlanRoute,
   apiPlanRouteMulti,
   apiRoutePoiCandidates,
+  apiRoutePoiTypes,
   apiScenicSearchByKeyword,
+  type PoiTypeDictItem,
   type RoutePoiCandidate,
   type ScenicArea,
 } from '../../lib/api'
@@ -50,14 +52,14 @@ const form = reactive({
   endId: null as number | null,
   vehicle: '' as string,
   strategy: '' as '' | 'distance' | 'time',
-  multiPointIds: [] as number[],
-  returnToStart: false,
+  multiPoints: '',
   showRoadNodes: false,
 })
 
 const result = ref<{ path: number[]; distance: number; time: number } | null>(null)
 
 const areaOpts = ref<ScenicArea[]>([])
+const poiTypeOptions = ref<PoiTypeDictItem[]>([])
 const areaLoading = ref(false)
 let areaSeq = 0
 
@@ -80,14 +82,6 @@ const nodeLabelMap = computed(() => {
   return out
 })
 
-const selectedMultiPointLabels = computed(() => {
-  const labelMap = nodeLabelMap.value
-  return form.multiPointIds.map((id) => ({
-    id,
-    label: labelMap[id] || `节点${id}`,
-  }))
-})
-
 const nodeDetailMap = computed(() => {
   const out: Record<number, RouteNodeDetail> = {}
   ;(map.value?.nodeDetails ?? []).forEach((node) => {
@@ -107,30 +101,27 @@ const nodeTypeMap = computed(() => {
   return out
 })
 
+const hasSelectedArea = computed(() => form.areaId != null)
+const poiTypeLabelMap = computed(() => {
+  const out: Record<string, string> = {}
+  poiTypeOptions.value.forEach((item) => {
+    const key = item.code?.trim().toLowerCase()
+    if (key) out[key] = item.label || item.code
+  })
+  return out
+})
+
 function poiTypeLabel(type?: string) {
   if (!type) return '未分类'
   const key = type.trim().toLowerCase()
-  switch (key) {
-    case 'scenic_spot':
-      return '景点'
-    case 'gate':
-      return '出入口'
-    case 'library':
-      return '图书馆'
-    case 'teaching':
-      return '教学楼'
-    case 'canteen':
-      return '食堂'
-    case 'service':
-      return '服务点'
-    case 'toilet':
-      return '厕所'
-    case 'dormitory':
-      return '宿舍'
-    case 'lab':
-      return '实验楼'
-    default:
-      return type
+  return poiTypeLabelMap.value[key] || type
+}
+
+async function loadPoiTypes() {
+  try {
+    poiTypeOptions.value = await apiRoutePoiTypes()
+  } catch {
+    poiTypeOptions.value = []
   }
 }
 
@@ -185,6 +176,7 @@ function renderGraph(highlightPath?: number[]) {
   const labels = nodeLabelMap.value
   const details = nodeDetailMap.value
   const types = nodeTypeMap.value
+  const showPoiNodes = hasSelectedArea.value || Boolean(highlightPath?.length)
   const positionMap = buildNodePositionMap()
   const fallbackRadius = 280
   const fallbackCenterX = 500
@@ -202,9 +194,10 @@ function renderGraph(highlightPath?: number[]) {
     const isPoi = Boolean(details[id])
     const showRoadNode = form.showRoadNodes || !isVirtual
     const isHighlighted = Boolean(highlightPath?.includes(id))
+    const visiblePoi = isPoi && showPoiNodes
     return {
       id: String(id),
-      name: isVirtual && !showRoadNode ? '' : isPoi ? labels[id] || String(id) : '',
+      name: isVirtual && !showRoadNode ? '' : visiblePoi ? labels[id] || String(id) : '',
       nodeId: id,
       nodeType: details[id]?.type,
       nodeLocation: details[id]?.location,
@@ -212,8 +205,8 @@ function renderGraph(highlightPath?: number[]) {
       latitude: details[id]?.latitude,
       x: pos.x,
       y: pos.y,
-      symbolSize: isVirtual && !showRoadNode ? 0 : isPoi ? (isHighlighted ? 18 : 10) : isHighlighted ? 8 : 4,
-      itemStyle: isPoi
+      symbolSize: isVirtual && !showRoadNode ? 0 : visiblePoi ? (isHighlighted ? 18 : 10) : isHighlighted ? 8 : 4,
+      itemStyle: visiblePoi
         ? isHighlighted
           ? { color: 'rgba(204,120,92,0.95)' }
           : isVirtual
@@ -224,7 +217,7 @@ function renderGraph(highlightPath?: number[]) {
         : isHighlighted
           ? { color: 'rgba(204,120,92,0.55)' }
           : { color: 'rgba(255,255,255,0.12)' },
-      label: isPoi && !isVirtual ? undefined : { show: false },
+      label: visiblePoi && !isVirtual ? undefined : { show: false },
     }
   })
 
@@ -308,6 +301,17 @@ function renderGraph(highlightPath?: number[]) {
 }
 
 async function loadMap() {
+  if (form.areaId == null) {
+    map.value = null
+    poiCandidates.value = []
+    result.value = null
+    form.startId = null
+    form.endId = null
+    form.multiPoints = ''
+    chart?.clear()
+    return
+  }
+
   loading.value = true
   try {
     const [mapData, candidates] = await Promise.all([
@@ -319,7 +323,7 @@ async function loadMap() {
     result.value = null
     form.startId = null
     form.endId = null
-    form.multiPointIds = []
+    form.multiPoints = ''
     renderGraph()
   } finally {
     loading.value = false
@@ -347,9 +351,12 @@ async function plan() {
 }
 
 async function planMulti() {
-  const points = form.multiPointIds.map((n) => Number(n)).filter((n) => Number.isFinite(n))
+  const points = form.multiPoints
+    .split(',')
+    .map((s) => Number(s.trim()))
+    .filter((n) => Number.isFinite(n))
   if (points.length < 2) {
-    ElMessage.warning('多点规划至少需要选择 2 个地点')
+    ElMessage.warning('多点规划至少需要 2 个位置（用逗号分隔节点ID）')
     return
   }
 
@@ -358,7 +365,6 @@ async function planMulti() {
     result.value = await apiPlanRouteMulti({
       areaId: form.areaId,
       points,
-      returnToStart: form.returnToStart,
       vehicle: form.vehicle || undefined,
       strategy: form.strategy || undefined,
     })
@@ -368,24 +374,16 @@ async function planMulti() {
   }
 }
 
-function moveMultiPoint(index: number, direction: -1 | 1) {
-  const target = index + direction
-  if (target < 0 || target >= form.multiPointIds.length) return
-  const copied = [...form.multiPointIds]
-  const temp = copied[index]
-  copied[index] = copied[target]
-  copied[target] = temp
-  form.multiPointIds = copied
-}
-
-onMounted(loadMap)
-
 watch(
   () => form.areaId,
   () => {
     void loadMap()
   },
 )
+
+onMounted(() => {
+  void loadPoiTypes()
+})
 </script>
 
 <template>
@@ -485,50 +483,8 @@ watch(
 
           <el-divider />
 
-          <el-form-item label="多点规划地点（多选）">
-            <el-select
-              v-model="form.multiPointIds"
-              multiple
-              filterable
-              clearable
-              collapse-tags
-              collapse-tags-tooltip
-              placeholder="请选择多个地点（至少 2 个）"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="node in nodeOptions"
-                :key="`multi-${node.nodeId}`"
-                :label="`${node.name}（ID ${node.nodeId}）`"
-                :value="node.nodeId"
-              />
-            </el-select>
-            <div class="hint muted">第一个点固定为起点；未回起点时最后一个点固定为终点。</div>
-          </el-form-item>
-          <el-form-item label="闭环设置">
-            <el-switch
-              v-model="form.returnToStart"
-              active-text="回到起点"
-              inactive-text="结束于最后一个点"
-            />
-          </el-form-item>
-          <el-form-item v-if="selectedMultiPointLabels.length" label="访问顺序（可调整）">
-            <div class="order-list">
-              <div v-for="(item, idx) in selectedMultiPointLabels" :key="`order-${item.id}-${idx}`" class="order-row">
-                <span class="order-name">{{ idx + 1 }}. {{ item.label }}（ID {{ item.id }}）</span>
-                <span class="order-actions">
-                  <el-button size="small" text :disabled="idx === 0" @click="moveMultiPoint(idx, -1)">上移</el-button>
-                  <el-button
-                    size="small"
-                    text
-                    :disabled="idx === selectedMultiPointLabels.length - 1"
-                    @click="moveMultiPoint(idx, 1)"
-                  >
-                    下移
-                  </el-button>
-                </span>
-              </div>
-            </div>
+          <el-form-item label="多点规划（用逗号分隔）">
+            <el-input v-model="form.multiPoints" placeholder="输入多个节点 ID，用逗号分隔（必填：至少 2 个点）" />
           </el-form-item>
           <el-button type="primary" plain @click="planMulti" :loading="loading">多点规划</el-button>
 
@@ -577,30 +533,6 @@ watch(
 .hint {
   margin-top: 6px;
   font-size: 12px;
-}
-.order-list {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.order-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.order-row:last-child {
-  border-bottom: none;
-}
-.order-name {
-  font-size: 13px;
-}
-.order-actions {
-  display: inline-flex;
-  gap: 4px;
 }
 .chart {
   height: 560px;
