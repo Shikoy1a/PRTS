@@ -307,7 +307,7 @@ async function loadMap() {
     result.value = null
     form.startId = null
     form.endId = null
-    form.multiPoints = ''
+    form.multiPointIds = []
     chart?.clear()
     return
   }
